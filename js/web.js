@@ -81,7 +81,11 @@ class Web{
         var val_txt=$("#inp_text_art").val();
         for (var i = 0; i < val_txt.length; i++) {
             let index_c=findCharPosition(val_txt[i]);
-            var emp_pic='<img style="float: left;width: 80px;" src="'+w.style_cur["txt"+index_c]+'"/>';
+            var emp_pic='';
+            if(index_c!=-1)
+                emp_pic='<img style="float: left;width: 80px;height:80px" src="'+w.style_cur["txt"+index_c]+'"/>';
+            else
+                emp_pic='<span style="float: left;width: 40px;height:80px">&nbsp</span>';
             $("#out_pic_art").append(emp_pic);
         }
     }
