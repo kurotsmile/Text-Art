@@ -1,5 +1,9 @@
 # Text-Art
 
+## Welcome to Text Art 
+
+where creativity meets the written word! At Text Art, we offer a fantastic online platform for those passionate about creating and exploring 
+
 ## Why Choose Text Art?
 Create Artistic Text: With our powerful and user-friendly tools, you can design unique typography according to your preferences. From bold to italic styles, and everything in between, Text Art provides you with the freedom to unleash your creativity.
 

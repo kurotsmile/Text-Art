@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CMS Carrot">
+    <meta name="author" content="Rot Tran">
+    <meta name="generator" content="Rot Tran 2024">
+    <title>CMS Manager Data</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="Carrot-Framework-Web/icon.ico">
+    <link href="Carrot-Framework-Web/carrot_cms.css?v=19" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.4.0/css/all.min.css" rel="stylesheet">
+    <meta name="theme-color" content="#7952b3">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.0/dist/sweetalert2.all.min.js"></script>
+    <script src="Carrot-Framework-Web/Carrot.js?v=18"></script>
+    <script src="Carrot-Framework-Web/cr_post.js?v=19"></script>
+    <script src="Carrot-Framework-Web/cr_icon.js?v=18"></script>
+    <script src="Carrot-Framework-Web/cr_firestore.js?v=18"></script>
+    <script src="Carrot-Framework-Web/cr_cms.js?v=20"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var p_order = new Post();
+            p_order.id_collection = "order";
+            p_order.label = "Đơn đặt hàng";
+            p_order.data_form_add.fields.push(cms.field('firstName', "FirstName"));
+            p_order.data_form_add.fields.push(cms.field('lastName', "LastName"));
+            p_order.data_form_add.fields.push(cms.field('address', "Address"));
+            p_order.data_form_add.fields.push(cms.field('postcode', "Postcode"));
+            p_order.data_form_add.fields.push(cms.field('city', "City"));
+            p_order.data_form_add.fields.push(cms.field('phone', "Phone"));
+            p_order.data_form_add.fields.push(cms.field('email', "Email"));
+            p_order.data_form_add.fields.push(cms.field('country', "Country"));
+            p_order.data_form_add.fields.push(cms.field('orderNotes', "OrderNotes"));
+            p_order.data_form_add.fields.push(cms.field('date', "Thời gian"));
+            p_order.data_form_add.fields.push(cms.field('paypal', "Cổng thanh toán"));
+            p_order.list_fields_table=["firstName","lastName","phone","email","orderNotes","date"];
+            cms.add(p_order);
+
+            var p_product = new Post();
+            p_product.id_collection = "product";
+            p_product.label = "Sản phẩm";
+            p_product.data_form_add.fields.push(cms.field("name", "Tên sản phẩm", "text",'',true));
+            p_product.data_form_add.fields.push(cms.field("price", "Giá sản phẩm", "text",'',true));
+            p_product.data_form_add.fields.push(cms.field("image", "Ảnh Sản phẩm", "file"));
+            p_product.data_form_add.fields.push(cms.field("tip", "Mô tả", "textarea"));
+            p_product.data_form_add.fields.push(cms.field("sale", "Bắt đầu giảm giá (Nhập giá gốc)", "text"));
+            p_product.data_form_add.fields.push(cms.field("star", "Số sao chất lượng sảng phẩn", "list",[{value:"0",label:"0 Đánh giá"},{value:"1",label:"1 sao"},{value:"2",label:"2 sao"},{value:"3",label:"3 sao"},{value:"4",label:"4 sao"},{value:"5",label:"5 sao"}]));
+            p_product.data_form_add.fields.push(cms.field("in_home", "Hiển thị ở trang chủ", "list",[{value:"0",label:"Không hiển thị ở trang chủ"},{value:"1",label:"Hiển thị ở trang chủ"}]));
+            p_product.data_form_add.fields.push(cms.field("order", "Thứ tự hiển thị", "number"));
+            cms.add(p_product);
+
+            var setting_pp_1 = new Post();
+            setting_pp_1.type="setting";
+            setting_pp_1.icon='<i class="fab fa-paypal"></i>';
+            setting_pp_1.id_collection = "setting_pp_1";
+            setting_pp_1.label = "Account Paypal 1";
+            setting_pp_1.data_form_add.fields.push(cms.field('api_paypal', "Api client-id 1","text"));
+            setting_pp_1.data_form_add.fields.push(cms.field('api_paypal_scenrest', "Api Secret 1","text"));
+            cms.add(setting_pp_1);
+            
+            var setting_pp_2 = new Post();
+            setting_pp_2.type="setting";
+            setting_pp_2.icon='<i class="fab fa-paypal"></i>';
+            setting_pp_2.id_collection = "setting_pp_2";
+            setting_pp_2.label = "Account Paypal 2";
+            setting_pp_2.data_form_add.fields.push(cms.field('api_paypal', "Api client-id 2","text"));
+            setting_pp_2.data_form_add.fields.push(cms.field('api_paypal_scenrest', "Api Secret 2","text"));
+            cms.add(setting_pp_2);
+
+            var setting_pp_3 = new Post();
+            setting_pp_3.type="setting";
+            setting_pp_3.icon='<i class="fab fa-paypal"></i>';
+            setting_pp_3.id_collection = "setting_pp_3";
+            setting_pp_3.label = "Account Paypal 3";
+            setting_pp_3.data_form_add.fields.push(cms.field('api_paypal', "Api client-id 3","text"));
+            setting_pp_3.data_form_add.fields.push(cms.field('api_paypal_scenrest', "Api Secret 3","text"));
+            cms.add(setting_pp_3);
+
+            var setting_pay = new Post();
+            setting_pay.type="setting";
+            setting_pay.icon='<i class="fab fa-cc-paypal"></i>';
+            setting_pay.id_collection = "setting_pay";
+            setting_pay.label = "Trạng thái thanh toán";
+            setting_pay.data_form_add.fields.push(cms.field('acc_paypal_sel', "Tài khoản paypal hiện tại","list",[{value:"0",label:"Account Paypal 1"},{value:"1",label:"Account Paypal 2"},{value:"2",label:"Account Paypal 3"}],false,'<i class="fas fa-robot"></i> Tài khoản sẽ tự động thay đổi với số lượng đơn hàng'));
+            setting_pay.data_form_add.fields.push(cms.field('order_paypal_count', "Đếm đơn hàng để chuyển tài khoản thanh toán","text",'',true,'<i class="fas fa-lightbulb"></i> Chỉ số này sẽ tự động thay đổi sau mỗi lần đặt hàng'));
+            cms.add(setting_pay);
+
+            var p_setting = new Post();
+            p_setting.type="setting";
+            p_setting.icon='<i class="fas fa-cogs"></i>';
+            p_setting.id_collection = "setting_home_shop";
+            p_setting.label = "Cài đặt Site";
+            p_setting.data_form_add.fields.push(cms.field('logo_txt', "Logo Text (Logo bằng chữ ở đầu menu)"));
+            p_setting.data_form_add.fields.push(cms.field('title', "Tiêu đề trang web trang chủ"));
+            p_setting.data_form_add.fields.push(cms.field('subtitle', "Tiêu đề phụ giới thiệu ngắn về trang web"));
+            p_setting.data_form_add.fields.push(cms.field('shipping_price', "Giá vận chuyển","text"));
+            p_setting.data_form_add.fields.push(cms.field('tax_price', "Giá thuế","text"));
+            cms.add(p_setting);
+
+            var setting_contact = new Post();
+            setting_contact.type="setting";
+            setting_contact.icon='<i class="fas fa-wrench"></i>';
+            setting_contact.id_collection = "setting_footer_info";
+            setting_contact.label = "Cài đặt Footer - Info";
+            setting_contact.data_form_add.fields.push(cms.field('footer_company', "Tên công ty"));
+            setting_contact.data_form_add.fields.push(cms.field('footer_company_logo', "Logo công ty (Image)","file"));
+            setting_contact.data_form_add.fields.push(cms.field('footer_company_tip', "Mô tả công ty"));
+            setting_contact.data_form_add.fields.push(cms.field('footer_copyright', "Bản quyền"));
+            cms.add(setting_contact);
+
+            var setting_fb_pixel = new Post();
+            setting_fb_pixel.type="setting";
+            setting_fb_pixel.icon='<i class="fab fa-facebook-square"></i>';
+            setting_fb_pixel.id_collection = "setting_fb_pixel";
+            setting_fb_pixel.label = "Facebook Ads Pixel";
+            setting_fb_pixel.data_form_add.fields.push(cms.field('api_key_page', "Pixel ID For All Page"));
+            setting_fb_pixel.data_form_add.fields.push(cms.field('api_key_register', "Pixel ID For Sign up for promotions","text","",false,'Nhập mã theo dõi hành động quảng cáo cho trang <a href="register.html" target="_blank">Sign up for promotions</a>'));
+            cms.add(setting_fb_pixel);
+
+            cms.add_menu("menu_product","Menu Products");
+            cms.add_menu("menu_links","Menu Useful links");
+            cms.add_menu("menu_footer_contact","Menu Contact");
+
+            cr.setColor("#0da4fd");
+            cr.onLoad();
+            cr.add_btn_top();
+            cr.get_json("config.json",(config_data)=>{
+                cr_firestore.id_project = config_data.id_project;
+                cr_firestore.api_key = config_data.api_key;
+                cms.mode=config_data.cms_mode;
+                cms.onLoad();
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Manager Data</a>
+    
+        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search" id="inp_cms_search">
+        <div class="navbar-nav">
+            <div class="nav-item text-nowrap"> 
+                <a class="nav-link px-3" href="#" onclick="cr.show_setting();return false;"><i class="fas fa-cog"></i> Setting</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3" style="height: 100%;overflow-y: auto;overflow-x: hidden;">
+                    <ul class="nav flex-column" id="list_post"></ul>
+                    <h6
+                        class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                        <span>Info Database Cloud</span>
+                        <a class="link-secondary" href="#" aria-label="Add a new report">
+                            <span data-feather="plus-circle"></span>
+                        </a>
+                    </h6>
+                    <ul class="nav flex-column mb-2" id="list_info">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <span data-feather="file-text"></span> Info Database Cloud
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" id="main_contain"></main>
+        </div>
+    </div>
+</body>
+</html>
