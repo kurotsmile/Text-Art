@@ -28,11 +28,22 @@ class Web{
                     <img src="${data.txt0}" class="card-img-top w-100" alt="Book 1">
                     <div class="card-body">
                         <h5 class="card-title">${data.name}</h5>
-                        <p class="card-text"><small class="text-muted" style="font-size:12px;">${data.tip}</small></p>
+                        <p class="card-text">
+                            <small class="text-muted" style="font-size:12px;">${data.tip}</small>
+                            
+                        </p>
+                        <button class="btn btn-sm btn-dark btn-used"><i class="fas fa-pen-nib"></i> Used</button>
                     </div>
                 </div>
             </div>
         `);
+
+        $(emp_box).find(".btn-used").click(function(){
+            cr.top();
+            w.style_cur=data;
+            return false;
+        });
+
         $(emp_box).click(()=>{
             w.show_style_by_data(data);
         });
@@ -40,11 +51,18 @@ class Web{
     }
 
     show_style_by_data(data){
+        var html='';
         cr.top();
         $("#head_banner").html("");
         $("#head_banner").html('<h1 class="display-4 mt-5">'+data.name+'</h1>');
         $("#all-item-styles").html("");
-        $("#all-item-styles").html(data.tip);
+        html+=data.tip;
+        html+='<div class="w-100">';
+        for(var i=0;i<26;i++){
+            html+='<img class="img-thumbnail rounded float-left m-2" style="width:90px;" src="'+data["txt"+i]+'"/>';
+        }
+        html+='</div>';
+        $("#all-item-styles").html(html);
     }
 
     create_text_art(){
