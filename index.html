@@ -45,14 +45,14 @@
     </div>
   </nav>
 
-  <div class="pricing-header px-3 py-3 mp-5 pb-md-4 mx-auto text-center">
+  <div class="pricing-header px-3 py-3 mp-5 pb-md-4 mx-auto text-center" id="head_banner">
     <h1 class="display-4 mt-5">Welcome to Text Art</h1>
     <p class="lead">where creativity meets the written word! At Text Art, we offer a fantastic online platform for those
       passionate about creating and exploring </p>
 
       <div class="container">
       <div class="row mt-5 mt-5">
-        <div class="col-4 text-center">
+        <div class="col-12 col-md-4 col-lg-4 text-center">
           <div class="card mb-4 shadow-sm bg-t">
             <div class="card-header">
               <h4 class="my-0 font-weight-normal">Create Text</h4>
@@ -61,25 +61,30 @@
             <div class="card-body">
               <form>
                 <label>Text</label>
-                <input class="form-control" />
-                <button type="button" class="btn btn-sm btn-block btn-info m-2"><i class="fas fa-play-circle"></i> Create</button>
+                <input class="form-control" id="inp_text_art" placeholder="Enter data here..." />
+                <button type="button" class="btn btn-sm btn-block btn-dark m-2" onclick="w.create_text_art();return false;"><i class="fas fa-play-circle"></i> Create</button>
               </form>
             </div>
           </div>
         </div>
   
-        <div class="col-8 text-center">
+        <div class="col-12 col-md-8 col-lg-8 text-center">
           <div class="card mb-4 shadow-sm bg-t">
             <div class="card-header">
               <h4 class="my-0 font-weight-normal">Result</h4>
             </div>
       
             <div class="card-body">
-              <form>
-                <label>Text</label>
-                <input class="form-control" />
-                <button type="button" class="btn btn-sm btn-block btn-info m-2"><i class="fas fa-font"></i> All Style</button>
-              </form>
+                <div class="w-100" id="out_pic_art">
+                  <img style="float: left;width: 80px;" src="https://firebasestorage.googleapis.com/v0/b/textartdesign.appspot.com/o/t.jpg?alt=media&token=5afa97de-a5bc-450d-a71b-924fd5b5ae3a"/>
+                  <img style="float: left;width: 80px;" src="https://firebasestorage.googleapis.com/v0/b/textartdesign.appspot.com/o/h.jpg?alt=media&token=5afa97de-a5bc-450d-a71b-924fd5b5ae3a"/>
+                  <img style="float: left;width: 80px;" src="https://firebasestorage.googleapis.com/v0/b/textartdesign.appspot.com/o/a.jpg?alt=media&token=5afa97de-a5bc-450d-a71b-924fd5b5ae3a"/>
+                  <img style="float: left;width: 80px;" src="https://firebasestorage.googleapis.com/v0/b/textartdesign.appspot.com/o/n.jpg?alt=media&token=5afa97de-a5bc-450d-a71b-924fd5b5ae3a"/>
+                  <img style="float: left;width: 80px;" src="https://firebasestorage.googleapis.com/v0/b/textartdesign.appspot.com/o/h.jpg?alt=media&token=5afa97de-a5bc-450d-a71b-924fd5b5ae3a"/>
+                  <br/>
+                  <button type="button" class="btn btn-sm btn-block btn-dark m-2"><i class="fas fa-download"></i> Download</button>
+                  <button type="button" class="btn btn-sm btn-block btn-dark m-2"><i class="fas fa-play-circle"></i> View style</button>
+                </div>
             </div>
           </div>
         </div>
