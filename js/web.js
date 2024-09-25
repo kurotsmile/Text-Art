@@ -2,7 +2,6 @@ class Web{
 
     style_cur=null;
     text_data="";
-    cart_data=[];
 
     onLoad(){
         cr.get_json("config.json",(config_data)=>{
@@ -10,8 +9,7 @@ class Web{
             cr_firestore.id_project = config_data.id_project;
             cr_firestore.api_key = config_data.api_key;
             cr.setColor("#740027");
-
-            if(localStorage.getItem("cart_data")) w.cart_data=JSON.parse(localStorage.getItem("cart_data"));
+            cr_shopping.onLoad("#w1W8yugUrrw3MifUfiGU");
             w.text_data=new Date().toLocaleString('en-us', { month: 'long' });
 
             var p=cr.arg("p");
@@ -23,7 +21,7 @@ class Web{
             }
             else w.show_home();
             cr.show_menu_list("#menu_top","menu",()=>{
-                w.update_cart();
+                cr_shopping.update_cart();
             });
             
         });
@@ -57,31 +55,7 @@ class Web{
         cr.top();
         cr.change_title("Cart","index.html?p=cart");
         w.banner_text('<i class="fas fa-shopping-cart"></i> Cart');
-        var html="";
-        html+='<div class="row mt-5 mb-5">';
-            html+='<div class="col-10">';
-                html+=w.nav('Cart');
-                html+='<ul class="list-group list-group-numbered">';
-                $.each(w.cart_data,function(index,c_item){
-                    html+='<li class="list-group-item d-flex">';
-                        html+='<div class="ms-2 me-auto">';
-                            html+='<div class="fw-bold">'+c_item.name+'</div>';
-                            html+='<small class="text-muted text-truncate">x 1 product</small>';
-                        html+='</div>';
-                        html+='<button class="btn btn-dark"><i class="fas fa-trash-alt"></i></button>';
-                    html+='</li>';
-                });
-                html+='</ul>';
-            html+='</div>';
-
-            html+='<div class="col-2 text-center">';
-                html+='<b class="fs-5">Price</b>';
-                html+='<p class="fs-2">$'+w.cart_data.length+'</p>';
-                html+='<div class="btn btn-dark w-100 m-1 btn-lg" id="btn_shoping_checkout"><i class="fas fa-cart-arrow-down"></i> CheckOut</div>';
-                html+='<div class="btn btn-dark w-100 m-1" id="btn_shoping_delete_all"><i class="fas fa-broom"></i> Clear All</div>';
-            html+='</div>';
-        html+='</div>';
-        $("#page_container").html(html);
+        $("#page_container").empty().append(cr_shopping.page_cart());
     }
 
     item_style_box(data){
@@ -110,7 +84,7 @@ class Web{
         });
 
         $(emp_box).find(".btn-cart").click(function(){
-            w.add_cart(data);
+            cr_shopping.add_cart(data);
             return false;
         });
 
@@ -268,40 +242,6 @@ class Web{
         html+='</ol>';
         html+='</nav>';
         return html
-    }
-
-    add_cart(data){
-
-        function check_product(){
-            let is_ready=true;
-            if(w.cart_data.length==0) return false;
-            $.each(w.cart_data,function(index,c_item){
-                if(c_item.id_doc==data.id_doc){
-                    is_ready=false;
-                    return false;
-                }
-            });
-            return is_ready;
-        }
-
-        if(check_product()){
-            w.cart_data.push(data);
-            localStorage.setItem("cart_data",JSON.stringify(w.cart_data));
-            cr.msg("Product added to cart successfully!","Cart","success");
-            w.update_cart();
-        }else{
-            cr.msg("The product is already in your cart!","Cart","warning");
-        }
-    }
-
-    update_cart(){
-        var emp_menu_cart=$("#w1W8yugUrrw3MifUfiGU");
-        var info_cart=emp_menu_cart.find('#info_cart');
-        var count_p=$(w.cart_data).length;
-        if(info_cart.length>0)
-            $(info_cart).html(count_p);
-        else
-            $(emp_menu_cart).append(' <span id="info_cart" class="bg-light p-1 rounded">'+count_p+'</span>');
     }
 }
 
