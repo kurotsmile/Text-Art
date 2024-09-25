@@ -25,3 +25,22 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+
+a:link {
+    color: rgb(133, 0, 110);
+    text-decoration: none;
+  }
+  
+  a:visited {
+    color: rgb(116, 0, 39);
+  }
+  
+
+  a:hover {
+    color: rgb(138, 1, 138);
+  }
+  
+  a:active {
+    color: rgb(150, 0, 112);
+  }

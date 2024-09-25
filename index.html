@@ -10,10 +10,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.4.1/css/all.min.css" rel="stylesheet">
-  <link href="css/style.css?v=1.23" rel="stylesheet">
+  <link href="css/style.css?v=1.25" rel="stylesheet">
   <script src="Carrot-Framework-Web/cr_firestore.js?v=1.21"></script>
-  <script src="Carrot-Framework-Web/Carrot.js?v=1.23"></script>
-  <script src="js/web.js?v=1.23"></script>
+  <script src="Carrot-Framework-Web/Carrot.js?v=1.25"></script>
+  <script src="js/web.js?v=1.25"></script>
 </head>
 
 <body>
@@ -26,17 +26,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
-        <ul class="navbar-nav me-auto mb-2 mb-md-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="index.html">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-          </li>
-        </ul>
+        <ul class="navbar-nav me-auto mb-2 mb-md-0" id="menu_top"></ul>
         <form class="d-flex" role="search">
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success" type="submit">Search</button>
@@ -47,101 +37,12 @@
 
   <div class="pricing-header px-3 py-3 mp-5 pb-md-4 mx-auto text-center" id="head_banner">
     <h1 class="display-4 mt-5">Welcome to Text Art</h1>
-    <p class="lead">where creativity meets the written word! At Text Art, we offer a fantastic online platform for those
-      passionate about creating and exploring </p>
-
-      <div class="container">
-      <div class="row mt-5 mt-5">
-        <div class="col-12 col-md-4 col-lg-4 text-center">
-          <div class="card mb-4 shadow-sm bg-t">
-            <div class="card-header">
-              <h4 class="my-0 font-weight-normal">Create Text</h4>
-            </div>
-      
-            <div class="card-body">
-              <form>
-                <label>Text</label>
-                <input class="form-control" id="inp_text_art" placeholder="Enter data here..." />
-                <button type="button" class="btn btn-sm btn-block btn-dark m-2" onclick="w.create_text_art();return false;"><i class="fas fa-play-circle"></i> Create</button>
-              </form>
-            </div>
-          </div>
-        </div>
-  
-        <div class="col-12 col-md-8 col-lg-8 text-center">
-          <div class="card mb-4 shadow-sm bg-t">
-            <div class="card-header">
-              <h4 class="my-0 font-weight-normal">Result</h4>
-            </div>
-      
-            <div class="card-body">
-                <div class="w-100" id="out_pic_art">
-                  <button type="button" class="btn btn-sm btn-block btn-dark m-2"><i class="fas fa-download"></i> Download</button>
-                  <button type="button" class="btn btn-sm btn-block btn-dark m-2"><i class="fas fa-play-circle"></i> View style</button>
-                </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <p class="lead">where creativity meets the written word! At Text Art, we offer a fantastic online platform for those passionate about creating and exploring </p>
   </div>
 
-  <div class="container">
+  <div class="container" id="page_container">
     <h1 class="text-center mb-4 mt-5">Style</h1>
-    <div class="row row-cols-1 row-cols-md-4 g-4 mt-5" id="all-item-styles">
-      <!-- Book 1 -->
-      <div class="col">
-        <div class="card book-card h-100">
-          <img src="https://via.placeholder.com/150" class="card-img-top book-img" alt="Book 1">
-          <div class="card-body">
-            <h5 class="card-title">Book Title 1</h5>
-            <p class="card-text">Author: John Doe</p>
-            <p class="card-text">This is a short description of Book 1. It provides a brief insight into the content.
-            </p>
-            <a href="#" class="btn btn-info"><i class="fab fa-google-play"></i> Read Now</a>
-          </div>
-        </div>
-      </div>
-      <!-- Book 2 -->
-      <div class="col">
-        <div class="card book-card h-100">
-          <img src="https://via.placeholder.com/150" class="card-img-top book-img" alt="Book 2">
-          <div class="card-body">
-            <h5 class="card-title">Book Title 2</h5>
-            <p class="card-text">Author: Jane Smith</p>
-            <p class="card-text">This is a short description of Book 2. It provides a brief insight into the content.
-            </p>
-            <a href="#" class="btn btn-info"><i class="fab fa-google-play"></i> Read Now</a>
-          </div>
-        </div>
-      </div>
-      <!-- Book 3 -->
-      <div class="col">
-        <div class="card book-card h-100">
-          <img src="https://via.placeholder.com/150" class="card-img-top book-img" alt="Book 3">
-          <div class="card-body">
-            <h5 class="card-title">Book Title 3</h5>
-            <p class="card-text">Author: Robert Brown</p>
-            <p class="card-text">This is a short description of Book 3. It provides a brief insight into the content.
-            </p>
-            <a href="#" class="btn btn-info"><i class="fab fa-google-play"></i> Read Now</a>
-          </div>
-        </div>
-      </div>
-      <!-- Book 3 -->
-      <div class="col">
-        <div class="card book-card h-100">
-          <img src="https://via.placeholder.com/150" class="card-img-top book-img" alt="Book 3">
-          <div class="card-body">
-            <h5 class="card-title">Book Title 3</h5>
-            <p class="card-text">Author: Robert Brown</p>
-            <p class="card-text">This is a short description of Book 3. It provides a brief insight into the content.
-            </p>
-            <a href="#" class="btn btn-info"><i class="fab fa-google-play"></i> Read Now</a>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div class="row row-cols-1 row-cols-md-4 g-4 mt-5" id="all-item-styles"></div>
   </div>
 
   <footer class="pt-4 mt-5 pt-md-5 border-top">
