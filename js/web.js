@@ -14,6 +14,7 @@ class Web{
     show_home(){
         $("#all-item-styles").html("");
         cr_firestore.list("style",data=>{
+            data.sort(function(a, b) { return parseInt(a.order) - parseInt(b.order);});
             w.style_cur=data[0];
             $.each(data,function(index,style){
                 $("#all-item-styles").append(w.item_style_box(style));
@@ -29,8 +30,7 @@ class Web{
                     <div class="card-body">
                         <h5 class="card-title">${data.name}</h5>
                         <p class="card-text">
-                            <small class="text-muted" style="font-size:12px;">${data.tip}</small>
-                            
+                            <small class="text-muted multiline-truncate" style="font-size:12px;">${data.tip}</small>
                         </p>
                         <button class="btn btn-sm btn-dark btn-used"><i class="fas fa-pen-nib"></i> Used</button>
                     </div>
