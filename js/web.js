@@ -70,6 +70,7 @@ class Web{
     }
 
     show_style_by_data(data){
+        cr.change_title(data.name,"index.html?p=style&id="+data.id_doc);
         var html='';
         w.banner_text(data.name);
         cr.top();
@@ -78,9 +79,9 @@ class Web{
             html+='<div class="col-10">';
                 html+='<nav aria-label="breadcrumb">';
                 html+='<ol class="breadcrumb">';
-                    html+='<li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i> Home</a></li>';
-                    html+='<li class="breadcrumb-item"><a href="#"><i class="fas fa-list"></i> Library</a></li>';
-                    html+='<li class="breadcrumb-item active" aria-current="page">Data</li>';
+                    html+='<li class="breadcrumb-item"><a href="#" onclick="w.show_home();return false;"><i class="fas fa-home"></i> Home</a></li>';
+                    html+='<li class="breadcrumb-item"><a href="#" onclick="w.show_all_styles();return false;"><i class="fas fa-list"></i> Library</a></li>';
+                    html+='<li class="breadcrumb-item active" aria-current="page">'+data.name+'</li>';
                 html+='</ol>';
                 html+='</nav>';
                 
@@ -186,6 +187,8 @@ class Web{
     }
 
     show_all_styles(){
+        cr.top();
+        cr.change_title("All Style","index.html?p=all_style");
         w.banner_text("All Style");
         var html='';
         html+='<div class="row row-cols-1 row-cols-md-4 g-4 mt-5" id="all-item-styles"></div>';
