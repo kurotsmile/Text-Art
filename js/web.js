@@ -2,22 +2,30 @@ class Web{
 
     style_cur=null;
     text_data="";
+    cart_data=[];
 
     onLoad(){
         cr.get_json("config.json",(config_data)=>{
             cr.site_url=config_data.site_url;
             cr_firestore.id_project = config_data.id_project;
             cr_firestore.api_key = config_data.api_key;
+            cr.setColor("#740027");
 
+            if(localStorage.getItem("cart_data")) w.cart_data=JSON.parse(localStorage.getItem("cart_data"));
             w.text_data=new Date().toLocaleString('en-us', { month: 'long' });
 
             var p=cr.arg("p");
             if(p=="all_style") w.show_all_styles();
+            else if(p=="cart") w.show_cart();
             else if(p=="style"){
                 var id_style=cr.arg("id");
+                w.show_style_by_id(id_style);
             }
             else w.show_home();
-            cr.show_menu_list("#menu_top","menu");
+            cr.show_menu_list("#menu_top","menu",()=>{
+                w.update_cart();
+            });
+            
         });
     }
 
@@ -45,6 +53,37 @@ class Web{
         });
     }
 
+    show_cart(){
+        cr.top();
+        cr.change_title("Cart","index.html?p=cart");
+        w.banner_text('<i class="fas fa-shopping-cart"></i> Cart');
+        var html="";
+        html+='<div class="row mt-5 mb-5">';
+            html+='<div class="col-10">';
+                html+=w.nav('Cart');
+                html+='<ul class="list-group list-group-numbered">';
+                $.each(w.cart_data,function(index,c_item){
+                    html+='<li class="list-group-item d-flex">';
+                        html+='<div class="ms-2 me-auto">';
+                            html+='<div class="fw-bold">'+c_item.name+'</div>';
+                            html+='<small class="text-muted text-truncate">x 1 product</small>';
+                        html+='</div>';
+                        html+='<button class="btn btn-dark"><i class="fas fa-trash-alt"></i></button>';
+                    html+='</li>';
+                });
+                html+='</ul>';
+            html+='</div>';
+
+            html+='<div class="col-2 text-center">';
+                html+='<b class="fs-5">Price</b>';
+                html+='<p class="fs-2">$'+w.cart_data.length+'</p>';
+                html+='<div class="btn btn-dark w-100 m-1 btn-lg" id="btn_shoping_checkout"><i class="fas fa-cart-arrow-down"></i> CheckOut</div>';
+                html+='<div class="btn btn-dark w-100 m-1" id="btn_shoping_delete_all"><i class="fas fa-broom"></i> Clear All</div>';
+            html+='</div>';
+        html+='</div>';
+        $("#page_container").html(html);
+    }
+
     item_style_box(data){
         var emp_box=$(`
             <div class="col">
@@ -52,11 +91,12 @@ class Web{
                     <img src="${data.txt0}" class="card-img-top w-100" alt="Book 1">
                     <div class="card-body">
                         <h5 class="card-title">${data.name}</h5>
-                        <p class="card-text fs-3">$${data.price}</p>
+                        <p class="card-text fs-3">$${parseFloat(data.price).toFixed(2)}</p>
                         <p class="card-text">
                             <small class="text-muted multiline-truncate" style="font-size:12px;">${data.tip}</small>
                         </p>
-                        <button class="btn btn-sm btn-dark btn-used"><i class="fas fa-pen-nib"></i> Used</button>
+                        <button class="btn btn-sm btn-dark btn-used"><i class="fas fa-pen-nib"></i> Try it out</button>
+                        <button class="btn btn-sm  btn-outline-dark btn-cart"><i class="fas fa-cart-plus"></i> Add cart</button>
                     </div>
                 </div>
             </div>
@@ -66,6 +106,11 @@ class Web{
             cr.top();
             w.style_cur=data;
             w.show_return_text(w.text_data);
+            return false;
+        });
+
+        $(emp_box).find(".btn-cart").click(function(){
+            w.add_cart(data);
             return false;
         });
 
@@ -83,13 +128,7 @@ class Web{
 
         html+='<div class="row mt-5 mb-5">';
             html+='<div class="col-10">';
-                html+='<nav aria-label="breadcrumb">';
-                html+='<ol class="breadcrumb">';
-                    html+='<li class="breadcrumb-item"><a href="#" onclick="w.show_home();return false;"><i class="fas fa-home"></i> Home</a></li>';
-                    html+='<li class="breadcrumb-item"><a href="#" onclick="w.show_all_styles();return false;"><i class="fas fa-list"></i> Library</a></li>';
-                    html+='<li class="breadcrumb-item active" aria-current="page">'+data.name+'</li>';
-                html+='</ol>';
-                html+='</nav>';
+                html+=w.nav(data.name);
                 
                 html+=data.tip;
                 html+='<div class="w-100">';
@@ -192,6 +231,15 @@ class Web{
         $("#head_banner").append(emp_editor);
     }
 
+    show_style_by_id(id){
+        w.loading();
+        cr_firestore.get("style",id,data=>{
+            w.show_style_by_data(data);
+        },()=>{
+            w.show_all_styles(id);
+        });
+    }
+
     show_all_styles(){
         cr.top();
         cr.change_title("All Style","index.html?p=all_style");
@@ -208,6 +256,52 @@ class Web{
 
     loading(){
         $("#page_container").html('<div class="row text-center mt-5 mb-5"><div class="col-12 fs-4"><i class="fas fa-spinner fa-spin"></i><br/> Loading...</div></div>');
+    }
+
+    nav(name_page_cur){
+        var html='';
+        html+='<nav aria-label="breadcrumb">';
+        html+='<ol class="breadcrumb">';
+            html+='<li class="breadcrumb-item"><a href="#" onclick="w.show_home();return false;"><i class="fas fa-home"></i> Home</a></li>';
+            html+='<li class="breadcrumb-item"><a href="#" onclick="w.show_all_styles();return false;"><i class="fas fa-list"></i> Library</a></li>';
+            html+='<li class="breadcrumb-item active" aria-current="page">'+name_page_cur+'</li>';
+        html+='</ol>';
+        html+='</nav>';
+        return html
+    }
+
+    add_cart(data){
+
+        function check_product(){
+            let is_ready=true;
+            if(w.cart_data.length==0) return false;
+            $.each(w.cart_data,function(index,c_item){
+                if(c_item.id_doc==data.id_doc){
+                    is_ready=false;
+                    return false;
+                }
+            });
+            return is_ready;
+        }
+
+        if(check_product()){
+            w.cart_data.push(data);
+            localStorage.setItem("cart_data",JSON.stringify(w.cart_data));
+            cr.msg("Product added to cart successfully!","Cart","success");
+            w.update_cart();
+        }else{
+            cr.msg("The product is already in your cart!","Cart","warning");
+        }
+    }
+
+    update_cart(){
+        var emp_menu_cart=$("#w1W8yugUrrw3MifUfiGU");
+        var info_cart=emp_menu_cart.find('#info_cart');
+        var count_p=$(w.cart_data).length;
+        if(info_cart.length>0)
+            $(info_cart).html(count_p);
+        else
+            $(emp_menu_cart).append(' <span id="info_cart" class="bg-light p-1 rounded">'+count_p+'</span>');
     }
 }
 

@@ -18,14 +18,17 @@ body {
     background-color: #ffffff57;
 }
 
+.bt-p{
+    background-color: rgb(133, 0, 110);
+}
+
 .multiline-truncate {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-
+}
 
 a:link {
     color: rgb(133, 0, 110);
