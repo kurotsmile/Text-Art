@@ -1,12 +1,16 @@
 class Web{
 
     style_cur=null;
+    text_data="";
 
     onLoad(){
+
         cr.get_json("config.json",(config_data)=>{
             cr.site_url=config_data.site_url;
             cr_firestore.id_project = config_data.id_project;
             cr_firestore.api_key = config_data.api_key;
+
+            w.text_data=new Date().toLocaleString('en-us', { month: 'long' });
             w.show_home();
         });
     }
@@ -16,6 +20,10 @@ class Web{
         cr_firestore.list("style",data=>{
             data.sort(function(a, b) { return parseInt(a.order) - parseInt(b.order);});
             w.style_cur=data[0];
+
+            $("#inp_text_art").val(w.text_data);
+            w.show_return_text(w.text_data);
+
             $.each(data,function(index,style){
                 $("#all-item-styles").append(w.item_style_box(style));
             });
@@ -41,6 +49,7 @@ class Web{
         $(emp_box).find(".btn-used").click(function(){
             cr.top();
             w.style_cur=data;
+            w.show_return_text(w.text_data);
             return false;
         });
 
@@ -66,6 +75,11 @@ class Web{
     }
 
     create_text_art(){
+        w.text_data=$("#inp_text_art").val();
+        w.show_return_text(w.text_data);
+    }
+
+    show_return_text(val_txt){
         const alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
         
         function findCharPosition(char) {
@@ -78,7 +92,6 @@ class Web{
         }
 
         $("#out_pic_art").html('');
-        var val_txt=$("#inp_text_art").val();
         for (var i = 0; i < val_txt.length; i++) {
             let index_c=findCharPosition(val_txt[i]);
             var emp_pic='';
