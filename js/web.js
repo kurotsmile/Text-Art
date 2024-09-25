@@ -10,7 +10,13 @@ class Web{
             cr_firestore.api_key = config_data.api_key;
 
             w.text_data=new Date().toLocaleString('en-us', { month: 'long' });
-            w.show_home();
+
+            var p=cr.arg("p");
+            if(p=="all_style") w.show_all_styles();
+            else if(p=="style"){
+                var id_style=cr.arg("id");
+            }
+            else w.show_home();
             cr.show_menu_list("#menu_top","menu");
         });
     }
@@ -19,13 +25,12 @@ class Web{
         var html_home='';
         html_home+='<h1 class="text-center mb-4 mt-5">Style</h1>';
         html_home+='<div class="row row-cols-1 row-cols-md-4 g-4 mt-5" id="all-item-styles"></div>';
-
-        $("#page_container").html(html_home);
-        $("#all-item-styles").html("");
+        w.loading();
         var q=new Firestore_Query("style");
         q.add_where("in_home","1");
         q.set_limit(8);
         q.get_data(data=>{
+            $("#page_container").html(html_home);
             data.sort(function(a, b) { return parseInt(a.order) - parseInt(b.order);});
             w.style_cur=data[0];
 
@@ -47,6 +52,7 @@ class Web{
                     <img src="${data.txt0}" class="card-img-top w-100" alt="Book 1">
                     <div class="card-body">
                         <h5 class="card-title">${data.name}</h5>
+                        <p class="card-text fs-3">$${data.price}</p>
                         <p class="card-text">
                             <small class="text-muted multiline-truncate" style="font-size:12px;">${data.tip}</small>
                         </p>
@@ -96,7 +102,7 @@ class Web{
             html+='<div class="col-2 text-center">';
                 html+='<b class="fs-5">Price</b>';
                 html+='<p class="fs-2">$'+data.price+'</p>';
-                html+='<div class="btn btn-dark w-100 m-1" id="btn_page_used"><i class="fas fa-pen-nib"></i> Used</div>';
+                html+='<div class="btn btn-dark w-100 m-1" id="btn_page_used"><i class="fas fa-pen-nib"></i> Try it out</div>';
                 html+='<div class="btn btn-dark w-100 m-1" id="btn_page_share"><i class="fas fa-share-alt"></i> Share</div>';
             html+='</div>';
 
@@ -190,15 +196,18 @@ class Web{
         cr.top();
         cr.change_title("All Style","index.html?p=all_style");
         w.banner_text("All Style");
-        var html='';
-        html+='<div class="row row-cols-1 row-cols-md-4 g-4 mt-5" id="all-item-styles"></div>';
-        $("#page_container").html(html);
+        w.loading();
         cr_firestore.list("style",data=>{
+            $("#page_container").html('<div class="row row-cols-1 row-cols-md-4 g-4 mt-5" id="all-item-styles"></div>');
             data.sort(function(a, b) { return parseInt(a.order) - parseInt(b.order);});
             $.each(data,function(index,style){
                 $("#all-item-styles").append(w.item_style_box(style));
             });
         });
+    }
+
+    loading(){
+        $("#page_container").html('<div class="row text-center mt-5 mb-5"><div class="col-12 fs-4"><i class="fas fa-spinner fa-spin"></i><br/> Loading...</div></div>');
     }
 }
 
