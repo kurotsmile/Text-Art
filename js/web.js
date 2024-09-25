@@ -55,7 +55,11 @@ class Web{
         cr.top();
         cr.change_title("Cart","index.html?p=cart");
         w.banner_text('<i class="fas fa-shopping-cart"></i> Cart');
-        $("#page_container").empty().append(cr_shopping.page_cart());
+        $("#page_container").empty();
+        var emp_nav=$(w.nav("Cart"));
+        $(emp_nav).addClass("mt-5");
+        $("#page_container").append(emp_nav);
+        $("#page_container").append(cr_shopping.page_cart());
     }
 
     item_style_box(data){
@@ -114,8 +118,9 @@ class Web{
 
             html+='<div class="col-2 text-center">';
                 html+='<b class="fs-5">Price</b>';
-                html+='<p class="fs-2">$'+data.price+'</p>';
-                html+='<div class="btn btn-dark w-100 m-1" id="btn_page_used"><i class="fas fa-pen-nib"></i> Try it out</div>';
+                html+='<p class="fs-2">$'+parseFloat(data.price).toFixed(2)+'</p>';
+                html+='<div class="btn btn-dark w-100 m-1 btn-lg" id="btn_page_used"><i class="fas fa-pen-nib"></i> Try it out</div>';
+                html+='<div class="btn btn-outline-dark btn-cart  w-100 m-1" id="btn_page_add_cart"><i class="fas fa-cart-plus"></i> Add cart</div>';
                 html+='<div class="btn btn-dark w-100 m-1" id="btn_page_share"><i class="fas fa-share-alt"></i> Share</div>';
             html+='</div>';
 
@@ -132,6 +137,11 @@ class Web{
 
         $(emp_page).find("#btn_page_share").click(()=>{
             cr.share();
+            return false;
+        });
+
+        $(emp_page).find("#btn_page_add_cart").click(()=>{
+            cr_shopping.add_cart(data);
             return false;
         });
 
