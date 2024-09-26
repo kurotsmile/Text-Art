@@ -2,6 +2,7 @@ class Web{
 
     style_cur=null;
     text_data="";
+    ver="1.0";
 
     onLoad(){
         cr.get_json("config.json",(config_data)=>{
@@ -9,21 +10,30 @@ class Web{
             cr_firestore.id_project = config_data.id_project;
             cr_firestore.api_key = config_data.api_key;
             cr.setColor("#740027");
-            cr_shopping.onLoad("#w1W8yugUrrw3MifUfiGU");
+            
             w.text_data=new Date().toLocaleString('en-us', { month: 'long' });
 
-            var p=cr.arg("p");
-            if(p=="all_style") w.show_all_styles();
-            else if(p=="cart") w.show_cart();
-            else if(p=="style"){
-                var id_style=cr.arg("id");
-                w.show_style_by_id(id_style);
-            }
-            else w.show_home();
-            cr.show_menu_list("#menu_top","menu",()=>{
-                cr_shopping.update_cart();
+            cr_firestore.list("setting",(datas)=>{
+                $.each(datas,function(index,setting){
+                    if(setting.id_doc=="setting_paypal"){
+                        cr_shopping.onLoad("#w1W8yugUrrw3MifUfiGU",setting.api_paypal,setting.api_paypal_scenrest);
+                    }
+                });
+
+                var p=cr.arg("p");
+                if(p=="all_style") w.show_all_styles();
+                else if(p=="cart") w.show_cart();
+                else if(p=='checkout') w.show_checkout();
+                else if(p=="style"){
+                    var id_style=cr.arg("id");
+                    w.show_style_by_id(id_style);
+                }
+                else w.show_home();
+                cr.show_menu_list("#menu_top","menu",()=>{
+                    cr_shopping.update_cart();
+                });
+
             });
-            
         });
     }
 
@@ -59,7 +69,9 @@ class Web{
         var emp_nav=$(w.nav("Cart"));
         $(emp_nav).addClass("mt-5");
         $("#page_container").append(emp_nav);
-        $("#page_container").append(cr_shopping.page_cart());
+        $("#page_container").append(cr_shopping.page_cart(()=>{
+            w.show_checkout();
+        }));
     }
 
     item_style_box(data){
@@ -196,8 +208,9 @@ class Web{
                             <div class="card-header"><h4 class="my-0 font-weight-normal">Create Text</h4></div>
                             <div class="card-body">
                                 <span id="editor_create_tip" class="text-muted mb-2"></span>
-                                <input class="form-control" id="inp_text_art" placeholder="Enter data here..." value="${w.text_data}" />
-                                <button type="button" class="btn btn-sm btn-block btn-dark m-2" onclick="w.create_text_art();return false;"><i class="fas fa-play-circle"></i> Create</button>
+                                <input class="form-control mb-2 mt-2" id="inp_text_art" placeholder="Enter data here..." value="${w.text_data}" />
+                                <button type="button" class="btn btn-sm btn-block btn-dark m-1" onclick="w.create_text_art();return false;"><i class="fas fa-play-circle"></i> Create</button>
+                                <button type="button" class="btn btn-sm btn-block btn-outline-dark m-1" onclick="cr.paste('#inp_text_art');return false;"><i class="fas fa-clipboard"></i> Paste</button>
                             </div>    
                         </div>
                     </div>
@@ -292,6 +305,19 @@ class Web{
         var html='';
         html+='<div class="col-12 text-center"><div class="bg-light p-5 rounded"><b><i class="fas fa-sad-tear fa-lg"></i></b><br/>List is empty!</div></div>';
         return html;
+    }
+
+    show_checkout(){
+        cr.top();
+        cr.change_title("Checkout","index.html?p=checkout");
+        w.banner_text("Checkout");
+        $("#page_container").html(w.loading());
+        cr.get("page/checkout.html?v="+w.ver,(data)=>{
+            $("#page_container").empty().append(cr_shopping.page_checkout(data));
+            cr_shopping.create_btn_checkout();
+        },()=>{
+            w.show_checkout();
+        });
     }
 }
 
