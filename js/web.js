@@ -3,6 +3,8 @@ class Web{
     style_cur=null;
     text_data="";
     ver="1.0";
+    gem=0;
+    str_currentDate="";
 
     onLoad(){
         cr.get_json("config.json",(config_data)=>{
@@ -12,6 +14,11 @@ class Web{
             cr.setColor("#740027");
             
             w.text_data=new Date().toLocaleString('en-us', { month: 'long' });
+            w.str_currentDate = new Date().toLocaleDateString('en-US').split('/').join('_');
+            if(localStorage.getItem("gem_"+w.str_currentDate)) 
+                w.gem=parseInt(localStorage.getItem("gem_"+w.str_currentDate));
+            else
+                w.gem=5;
 
             cr_firestore.list("setting",(datas)=>{
                 $.each(datas,function(index,setting){
@@ -32,6 +39,7 @@ class Web{
                 else w.show_home();
                 cr.show_menu_list("#menu_top","menu",()=>{
                     cr_shopping.update_cart();
+                    w.update_gem();
                 });
 
             });
@@ -164,6 +172,7 @@ class Web{
     }
 
     create_text_art(){
+        if(!w.used_gem()) return false;
         w.text_data=$("#inp_text_art").val();
         w.show_return_text(w.text_data);
     }
@@ -320,6 +329,27 @@ class Web{
         },()=>{
             w.show_checkout();
         });
+    }
+
+    update_gem(){
+        var info_gem=$("#wLeyfYBB9neSsF7qoqLc").find('#info_gem');
+        if(info_gem.length>0)
+            $(info_gem).html(w.gem);
+        else
+            $("#wLeyfYBB9neSsF7qoqLc").append(' <span id="info_gem" class="bg-light p-1 rounded">'+w.gem+'</span>');
+    }
+
+    used_gem(){
+        if(w.gem>0){
+            w.gem--;
+            localStorage.setItem("gem_"+w.str_currentDate,w.gem.toString());
+            w.update_gem();
+            return true;
+        }else{
+            cr.msg("You've used up all your gems for today, buy more gems to try out the fonts. Or buy this font to use it forever!","Gem","warning");
+            w.gem=0;
+            return false;
+        }
     }
 }
 
