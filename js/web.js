@@ -172,9 +172,9 @@ class Web{
             let index_c=findCharPosition(val_txt[i]);
             var emp_pic='';
             if(index_c!=-1)
-                emp_pic='<img style="float: left;width: 80px;height:80px" src="'+w.style_cur["txt"+index_c]+'"/>';
+                emp_pic='<div class="image-container"><img src="'+w.style_cur["txt"+index_c]+'"/></div>';
             else
-                emp_pic='<span style="float: left;width: 40px;height:80px">&nbsp</span>';
+                emp_pic='<span style="width: 40px;">&nbsp</span>';
             $("#out_pic_art").append(emp_pic);
         }
     }
@@ -205,7 +205,7 @@ class Web{
                     <div class="col-12 col-md-8 col-lg-8 text-center">
                         <div class="card mb-4 shadow-sm bg-t">
                             <div class="card-header"><h4 class="my-0 font-weight-normal">Result (${w.style_cur.name})</h4></div>
-                            <div class="card-body" id="out_pic_art"></div>
+                            <div class="card-body image-gallery" id="out_pic_art"></div>
                         </div>
                     </div>
                 </div>
