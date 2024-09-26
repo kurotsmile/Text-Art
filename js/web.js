@@ -7,6 +7,7 @@ class Web{
     str_currentDate="";
 
     onLoad(){
+        w.loading();
         cr.get_json("config.json",(config_data)=>{
             cr.site_url=config_data.site_url;
             cr_firestore.id_project = config_data.id_project;
@@ -23,7 +24,18 @@ class Web{
             cr_firestore.list("setting",(datas)=>{
                 $.each(datas,function(index,setting){
                     if(setting.id_doc=="setting_paypal"){
-                        cr_shopping.onLoad("#w1W8yugUrrw3MifUfiGU",setting.api_paypal,setting.api_paypal_scenrest);
+                        var api_paypal='';
+                        var api_paypal_scenrest='';
+
+                        if(setting.type=="live"){
+                            api_paypal=setting.api_paypal;
+                            api_paypal_scenrest=setting.api_paypal_scenrest;
+                        }else{
+                            api_paypal=setting.api_paypal_sandbox;
+                            api_paypal_scenrest=setting.api_paypal_scenrest_sandbox;
+                        }
+
+                        cr_shopping.onLoad("#w1W8yugUrrw3MifUfiGU",api_paypal,api_paypal_scenrest,setting.type);
                         cr_shopping.tax_price="1.00";
                     }
                 });
@@ -31,6 +43,8 @@ class Web{
                 var p=cr.arg("p");
                 if(p=="all_style") w.show_all_styles();
                 else if(p=="cart") w.show_cart();
+                else if(p=="gem") w.show_gem();
+                else if(p=="gem_success") w.show_gem_success();
                 else if(p=='checkout') w.show_checkout();
                 else if(p=="style"){
                     var id_style=cr.arg("id");
@@ -66,7 +80,7 @@ class Web{
                 $("#all-item-styles").append(w.item_style_box(style));
             });
 
-            $("#page_container").append('<div class="w-100 mt-5 mb-5 text-center"><button class="btn btn-dark" onclick="w.show_all_styles();return false;"><i class="fas fa-angle-double-right"></i> See more</button></div>');
+            $("#page_container").append('<div class="w-100 mt-5 mb-5 text-center"><button class="btn btn-dark btn-lg" onclick="w.show_all_styles();return false;"><i class="fas fa-angle-double-right"></i> See more</button></div>');
         });
     }
 
@@ -350,6 +364,43 @@ class Web{
             w.gem=0;
             return false;
         }
+    }
+
+    show_gem(){
+        let list_gem_amount=[50,100,150,300,1000,5000];
+        let list_gem_price=[0.50,1,1.50,2,10,20];
+        cr.top();
+        cr.change_title("Gem","index.html?p=gem");
+        w.banner_text('<i class="far fa-gem"></i> Gem');
+        $("#page_container").html('<div class="row row-cols-1 row-cols-md-4 g-4 mt-5" id="all-item-gem"></div>');
+
+        $.each(list_gem_amount,function(index,gem){
+            $("#all-item-gem").append(w.box_gem_item(list_gem_amount[index],list_gem_price[index]));
+        });
+    }
+
+    box_gem_item(amount,price){
+        var html=$(`
+            <div class="col text-center">
+                <div class="bg-light rounded p-3">
+                    <p class="fs-2 mt-3">
+                        <i class="fas fa-gem fa-lg"></i>
+                    </p>
+                    <p class="fs-5">+${amount} Gem</p>
+                    <p class="fs-2">$${parseFloat(price).toFixed(2)}</p>
+                    <button class="btn btn-outline-dark btn-sm"><i class="fab fa-paypal"></i> Pay Now </button>
+                </div>
+            </div>    
+        `);
+        $(html).click(()=>{
+            cr_shopping.show_pay("Gem "+amount,price,cr.site_url+"/index.html?p=gem_success",cr.site_url+"/index.html?p=gem_cancel");
+        });
+        return html;
+    }
+
+    show_gem_success(){
+        w.banner_text("Payment successful!","Thank you for purchasing our products!");
+        w.loading();
     }
 }
 
