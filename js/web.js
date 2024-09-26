@@ -253,6 +253,46 @@ class Web{
         html+='</nav>';
         return html
     }
+
+    seach_web(){
+        var inp_search_web=$("#inp_search_web").val();
+        if(!cr.alive(inp_search_web)){
+            cr.msg("Search keyword cannot be empty!","Search","warning");
+            return false;
+        }
+
+        cr.change_title("Search results","index.html?p=search_results&key="+encodeURIComponent(inp_search_web));
+        w.banner_text('<i class="fas fa-search"></i> Search results',inp_search_web);
+        w.loading();
+        cr_firestore.list("style",data=>{
+            var list_style=[];
+            
+            data.sort(function(a, b) { return parseInt(a.order) - parseInt(b.order);});
+            $.each(data,function(index,style){
+                var key_check=style.name.toUpperCase();
+                var key_seach=inp_search_web.toUpperCase();
+                if(key_check.indexOf(key_seach)!=-1) list_style.push(style);
+            });
+
+            if(list_style.length>0){
+                $("#page_container").html('<div class="row row-cols-1 row-cols-md-4 g-4 mt-5" id="all-item-styles"></div>');
+                $.each(list_style,function(index,s){
+                    $("#all-item-styles").append(w.item_style_box(s));
+                });
+            }else{
+                var emp_empty=$(w.list_empty());
+                emp_empty.addClass("mt-5 mb-3");
+                $("#page_container").html(emp_empty);
+            }
+            
+        });
+    }
+
+    list_empty(){
+        var html='';
+        html+='<div class="col-12 text-center"><div class="bg-light p-5 rounded"><b><i class="fas fa-sad-tear fa-lg"></i></b><br/>List is empty!</div></div>';
+        return html;
+    }
 }
 
 var w=new Web();
