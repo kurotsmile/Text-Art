@@ -361,7 +361,22 @@ class Web{
             w.update_gem();
             return true;
         }else{
-            cr.msg("You've used up all your gems for today, buy more gems to try out the fonts. Or buy this font to use it forever!","Gem","warning");
+            var html='';
+            html+='<p>You\'ve used up all your gems for today, buy more gems to try out the fonts.<br/> Or buy this font to use it forever!</p>';
+            html+='<p id="gem_add_btns"></p>';
+            cr.msg(html,"Gem","warning",()=>{
+                var btn_get_gem=$(`<button class="btn btn-dark m-1"><i class="fas fa-cart-plus"></i> Buy more Gems</button>`);
+                $(btn_get_gem).click(()=>{
+                    w.show_gem();
+                    Swal.close();
+                    return false;
+                });
+                $("#gem_add_btns").append(btn_get_gem);
+
+                var btn_cancel_gem=$(`<button class="btn btn-outline-dark m-1"><i class="fas fa-window-close"></i> Cancel</button>`);
+                $(btn_cancel_gem).click(Swal.close);
+                $("#gem_add_btns").append(btn_cancel_gem);
+            },null,false);
             w.gem=0;
             return false;
         }
@@ -394,6 +409,7 @@ class Web{
             </div>    
         `);
         $(html).click(()=>{
+            localStorage.setItem("gem_add_amout",amount);
             cr_shopping.show_pay("Gem "+amount,price,cr.getBaseUrl()+"/index.html?p=gem_success",cr.getBaseUrl()+"/index.html?p=pay_cancel");
         });
         return html;
@@ -403,6 +419,9 @@ class Web{
         w.banner_text("Payment successful!","Thank you for purchasing our products!");
         w.loading();
         cr_shopping.captureOrder_cur((data)=>{
+            w.gem=parseInt(w.gem)+parseInt(localStorage.getItem("gem_add_amout"));
+            localStorage.setItem("gem_"+w.str_currentDate,w.gem);
+            w.update_gem();
             $("#page_container").html("Thanh toán thành công :"+JSON.stringify(data));
         },(error)=>{
             $("#page_container").html("Thanh toán thất bại :"+JSON.stringify(error));
