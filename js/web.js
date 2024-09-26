@@ -45,6 +45,7 @@ class Web{
                 else if(p=="cart") w.show_cart();
                 else if(p=="gem") w.show_gem();
                 else if(p=="gem_success") w.show_gem_success();
+                else if(p=="pay_cancel") w.show_pay_cancel();
                 else if(p=='checkout') w.show_checkout();
                 else if(p=="style"){
                     var id_style=cr.arg("id");
@@ -393,7 +394,7 @@ class Web{
             </div>    
         `);
         $(html).click(()=>{
-            cr_shopping.show_pay("Gem "+amount,price,cr.site_url+"/index.html?p=gem_success",cr.site_url+"/index.html?p=gem_cancel");
+            cr_shopping.show_pay("Gem "+amount,price,cr.getBaseUrl()+"/index.html?p=gem_success",cr.getBaseUrl()+"/index.html?p=pay_cancel");
         });
         return html;
     }
@@ -401,6 +402,16 @@ class Web{
     show_gem_success(){
         w.banner_text("Payment successful!","Thank you for purchasing our products!");
         w.loading();
+        cr_shopping.captureOrder_cur((data)=>{
+            $("#page_container").html("Thanh toán thành công :"+JSON.stringify(data));
+        },(error)=>{
+            $("#page_container").html("Thanh toán thất bại :"+JSON.stringify(error));
+        });
+    }
+
+    show_pay_cancel(){
+        w.banner_text("Payment Cancelled","Don't miss out on good products and services! Hope you will order again soon!");
+        $("#page_container").emp_empty();
     }
 }
 
