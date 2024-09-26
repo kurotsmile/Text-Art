@@ -17,6 +17,7 @@ class Web{
                 $.each(datas,function(index,setting){
                     if(setting.id_doc=="setting_paypal"){
                         cr_shopping.onLoad("#w1W8yugUrrw3MifUfiGU",setting.api_paypal,setting.api_paypal_scenrest);
+                        cr_shopping.tax_price="1.00";
                     }
                 });
 
@@ -72,6 +73,7 @@ class Web{
         $("#page_container").append(cr_shopping.page_cart(()=>{
             w.show_checkout();
         }));
+        cr_shopping.update_cart();
     }
 
     item_style_box(data){
@@ -297,7 +299,6 @@ class Web{
                 emp_empty.addClass("mt-5 mb-3");
                 $("#page_container").html(emp_empty);
             }
-            
         });
     }
 
@@ -314,6 +315,7 @@ class Web{
         $("#page_container").html(w.loading());
         cr.get("page/checkout.html?v="+w.ver,(data)=>{
             $("#page_container").empty().append(cr_shopping.page_checkout(data));
+            cr_shopping.update_cart();
             cr_shopping.create_btn_checkout();
         },()=>{
             w.show_checkout();
