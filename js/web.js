@@ -235,7 +235,7 @@ class Web{
                             <div class="card-body">
                                 <span id="editor_create_tip" class="text-muted mb-2"></span>
                                 <input class="form-control mb-2 mt-2" id="inp_text_art" placeholder="Enter data here..." value="${w.text_data}" />
-                                <button type="button" class="btn btn-sm btn-block btn-dark m-1" onclick="w.create_text_art();return false;"><i class="fas fa-play-circle"></i> Create</button>
+                                <button type="button" class="btn btn-sm btn-block btn-dark m-1" onclick="w.create_text_art();return false;"><i class="fas fa-play-circle"></i> <span id="btn_create_txt">Create<span></button>
                                 <button type="button" class="btn btn-sm btn-block btn-outline-dark m-1" onclick="cr.paste('#inp_text_art');return false;"><i class="fas fa-clipboard"></i> Paste</button>
                             </div>    
                         </div>
@@ -251,6 +251,7 @@ class Web{
             </div>
         `);
         $(emp_editor).find("#editor_create_tip").html("Enter the content you want to create artistic text");
+        $(emp_editor).find("#btn_create_txt").html('Create <small class="text-warning"><i class="far fa-gem"></i> -1</small>');
         $("#head_banner").append(emp_editor);
     }
 
