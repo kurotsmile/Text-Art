@@ -35,7 +35,7 @@ class Web{
                             api_paypal_scenrest=setting.api_paypal_scenrest_sandbox;
                         }
 
-                        cr_shopping.onLoad("#w1W8yugUrrw3MifUfiGU",api_paypal,api_paypal_scenrest,setting.type);
+                        cr_shopping.onLoad("#a_m_top_cart",api_paypal,api_paypal_scenrest,setting.type);
                         cr_shopping.tax_price="1.00";
                     }
                 });
@@ -348,11 +348,11 @@ class Web{
     }
 
     update_gem(){
-        var info_gem=$("#wLeyfYBB9neSsF7qoqLc").find('#info_gem');
+        var info_gem=$("#a_m_top_gem").find('#info_gem');
         if(info_gem.length>0)
             $(info_gem).html(w.gem);
         else
-            $("#wLeyfYBB9neSsF7qoqLc").append(' <span id="info_gem" class="bg-light p-1 rounded">'+w.gem+'</span>');
+            $("#a_m_top_gem").append('<span id="info_gem" class="badge badge-light text-black">'+w.gem+'</span>');
     }
 
     used_gem(){
