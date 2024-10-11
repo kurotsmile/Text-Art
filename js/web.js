@@ -142,7 +142,7 @@ class Web{
         cr.top();
 
         html+='<div class="row mt-5 mb-5">';
-            html+='<div class="col-10">';
+            html+='<div class="col-12 col-md-10 col-lg-10 col-xl-10">';
                 html+=w.nav(data.name);
                 
                 html+=data.tip;
@@ -153,7 +153,7 @@ class Web{
                 html+='</div>';
             html+='</div>';
 
-            html+='<div class="col-2 text-center">';
+            html+='<div class="col-12 text-center col-md-2 col-lg-2 col-xl-2">';
                 html+='<b class="fs-5">Price</b>';
                 html+='<p class="fs-2">$'+parseFloat(data.price).toFixed(2)+'</p>';
                 html+='<div class="btn btn-dark w-100 m-1 btn-lg" id="btn_page_used"><i class="fas fa-pen-nib"></i> Try it out</div>';
